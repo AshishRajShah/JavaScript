@@ -1,7 +1,6 @@
 //      ------------        Move A File.........
-
-let fs = require("fs")
-const { dirname } = require("path")
+let fs = require("fs");
+// let fst = require("fs-extra")        -- not working at this time..
 let path = require("path")
 
 //--- create a file...
@@ -21,3 +20,18 @@ if(!fs.existsSync(dirPath))
     fs.mkdirSync(dirPath)
 
 //--- 2nd move the file "moveFile.txt" to Moving Dir..
+
+let destPath = path.join(dirPath,"moveFile.txt")
+// i--
+fs.copyFileSync(filePath,destPath)
+
+fs.unlinkSync(filePath)
+
+
+/* fst.moveSync(filePath,dirPath,function(err)
+{
+    if(err)
+        return console.log(err);
+    else
+        console.log("File move Successfully..")
+}) */
