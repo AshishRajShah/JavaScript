@@ -16,22 +16,30 @@ request(link, function(err,request,html)
         // console.log(html);           -- all good...
         const dom = new JSDOM(html);
         const document = dom.window.document;
-        const baller = document.querySelectorAll('.ds-w-full.ds-table.ds-table-xs.ds-table-fixed:nth-child(2) tbody .ds-border-b.ds-border-line.ds-text-tight-s')
-
+        // const baller = document.querySelectorAll('.ds-w-full.ds-table.ds-table-xs.ds-table-fixed:nth-child(2) tbody .ds-border-b.ds-border-line.ds-text-tight-s')
         // console.log(baller.length);      -- correct..
 
-        for(let i=0;i<baller.length; i++)
+        let ballerTeam  = document.querySelectorAll('.ds-w-full.ds-table.ds-table-xs.ds-table-fixed:nth-child(2) tbody')
+        let teamNameRow = document.querySelectorAll('.ds-text-tight-s.ds-font-bold.ds-uppercase') // not accurate
+        // let teamNameRow = document.querySelectorAll('ds-text-ui-typo hover:ds-text-ui-typo-primary ds-block ')
+        for(let j=0; j<ballerTeam.length; j++)
         {
-            // console.log(baller[i].textContent);     //------- it shows all baller..details
-            let rows = baller[i];
-            let tds = rows.querySelectorAll('td')
-            let BallerName = tds[0].textContent
-            let wicket = tds[4].textContent
-
-            console.log("Baller name : --- ",BallerName,"\t Wicket  :---- ",wicket);
-            
-
+            let rows = ballerTeam[j].querySelectorAll('.ds-border-b.ds-border-line.ds-text-tight-s');
+            // console.log(rows.length);        //-- it gives output 6 6 bcz there is 2 team..
+            let teamName = teamNameRow[j].textContent;
+            console.log("\n---------------  ",teamName,"  -------------------\n");
+            // for(let i=0;i<baller.length; i++)
+            for(let i=0; i<rows.length; i++)
+            {
+                // console.log(baller[i].textContent);     //------- it shows all baller..details
+                let tds = rows[i].querySelectorAll('td')
+                let BallerName = tds[0].textContent
+                let wicket = tds[4].textContent
+    
+                console.log("Baller name : --- ",BallerName,"\t Wicket  :---- ",wicket);
+            }
         }
+
     }
 })
 
