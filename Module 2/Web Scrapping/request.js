@@ -21,5 +21,4 @@ request(link,function cb(err,request,html)      //-- go to link ...
         console.log(winTeam.textContent);
 
     }
-
 })
