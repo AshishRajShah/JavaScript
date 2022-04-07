@@ -27,11 +27,13 @@ let destPath = path.join(dirPath,"moveFile.txt")
 
 // fs.unlinkSync(filePath)
  
-
-fs.moveSync(filePath,destPath,function(err)
+if(!fs.existsSync(destPath))
 {
-    if(err)
-        return console.log(err);
-    else
-        console.log("File move Successfully..")
-}) 
+    fs.moveSync(filePath,destPath,function(err)
+    {
+        if(err)
+            return console.log(err);
+        else
+            console.log("File move Successfully..")
+    }) 
+}
