@@ -20,8 +20,7 @@ request(link, function(err,request,html)
         // console.log(baller.length);      -- correct..
 
         let ballerTeam  = document.querySelectorAll('.ds-w-full.ds-table.ds-table-xs.ds-table-fixed:nth-child(2) tbody')
-        let teamNameRow = document.querySelectorAll('.ds-text-tight-s.ds-font-bold.ds-uppercase') // not accurate
-        // let teamNameRow = document.querySelectorAll('ds-text-ui-typo hover:ds-text-ui-typo-primary ds-block ')
+        let teamNameRow = document.querySelectorAll('[class ="ds-text-ui-typo hover:ds-text-ui-typo-primary ds-block"]')
         for(let j=0; j<ballerTeam.length; j++)
         {
             let rows = ballerTeam[j].querySelectorAll('.ds-border-b.ds-border-line.ds-text-tight-s');
