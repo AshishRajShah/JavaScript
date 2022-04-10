@@ -1,7 +1,7 @@
 /* 
         Print player name and  highest wicket gainer from wep page...
 */
-const request = require('request'); //--- it takes request from the module..
+const request = require('request');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
@@ -19,8 +19,8 @@ request(link, function(err,request,html)
         // const baller = document.querySelectorAll('.ds-w-full.ds-table.ds-table-xs.ds-table-fixed:nth-child(2) tbody .ds-border-b.ds-border-line.ds-text-tight-s')
         // console.log(baller.length);      -- correct..
 
-        let ballerTeam  = document.querySelectorAll('.ds-w-full.ds-table.ds-table-xs.ds-table-fixed:nth-child(2) tbody')
-        let teamNameRow = document.querySelectorAll('[class ="ds-text-ui-typo hover:ds-text-ui-typo-primary ds-block."]')
+        let ballerTeam  = document.querySelectorAll('.ds-w-full.ds-table.ds-table-xs.ds-table-fixed:nth-child(2) tbody')  //-- output : 2
+        let teamNameRow = document.querySelectorAll('[class ="ds-text-ui-typo hover:ds-text-ui-typo-primary ds-block"] span ')
         for(let j=0; j<ballerTeam.length; j++)
         {
             let rows = ballerTeam[j].querySelectorAll('.ds-border-b.ds-border-line.ds-text-tight-s');
