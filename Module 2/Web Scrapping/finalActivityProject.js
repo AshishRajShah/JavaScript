@@ -7,6 +7,7 @@ const { JSDOM } = jsdom
 let link = "https://www.espncricinfo.com/series/indian-premier-league-2022-1298423/match-results"
 
 let allPlayer =[]
+
 let counter = 0
 
 request(link , function cb(err,req,html)
@@ -44,14 +45,17 @@ request(link , function cb(err,req,html)
                     { 
                         let batmanRows = players[j].querySelectorAll('.ds-w-full.ds-table.ds-table-xs.ds-table-fixed.ci-scorecard-table tbody .ds-border-b.ds-border-line.ds-text-tight-s')
                         // console.log(batmanRows.length);
-                        console.log("\n------------  ",teamName[j].textContent,"  ------------\n");
+                        let teamsName = teamName[j].textContent
+                        let teamPlayer=[]
 
-                        console.log("-- Batman --\t \t -- Runs -- \t -- Balls -- \t -- fours -- \t -- sixer ---\n")
+                        console.log("\n------------  ",teamsName,"  ------------\n");
+
+                        // console.log("-- Batman --\t \t -- Runs -- \t -- Balls -- \t -- fours -- \t -- sixer ---\n")
                         for(let k=0; k<batmanRows.length; k++)
                         {
                             let tds = batmanRows[k].querySelectorAll('td')
                             // console.log(tds.length);
-                           
+
                             if(tds.length >4)
                             {
                                 let batsmanName = tds[0].textContent
@@ -61,17 +65,17 @@ request(link , function cb(err,req,html)
                                 let fours  = tds[5].textContent
                                 let sixers  = tds[6].textContent
 
-                                console.log(batsmanName,"\t   ","\t\t",Run,"\t\t",balls,"\t\t",fours,"\t\t",sixers);
-
-                                playerDetails(batsmanName,Run,balls,fours,sixers,teamName[j].textContent);
+                                teamPlayer.push({"Name":batsmanName,"Runs":Run,"Balls":balls,"Fours":fours,"Sixers":sixers})
+                                playerDetails(batsmanName,Run,balls,fours,sixers,teamsName);
                                 
                             }
                         }
+                        console.table(teamPlayer)
                     }
+                    
                     console.log("\n-------------->\t",winnerTeam.textContent,"\t <-----------------");
-                    console.log("\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+                    console.log("\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
                 }
-
                 counter--;
                 if(counter == 0)
                 {
@@ -98,14 +102,12 @@ request(link , function cb(err,req,html)
                         extraLength :3,
                         writeOptions :{},
                     }
-                    xlsx(data,settings)
-                }
 
-            })
-            
-            
+                    if(!fs.existsSync(settings.fileName))
+                         xlsx(data,settings)
+                }
+            })   
         }
-        
     }
 })
 
