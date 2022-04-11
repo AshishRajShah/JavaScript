@@ -46,7 +46,7 @@ request(link , function cb(err,req,html)
                         let batmanRows = players[j].querySelectorAll('.ds-w-full.ds-table.ds-table-xs.ds-table-fixed.ci-scorecard-table tbody .ds-border-b.ds-border-line.ds-text-tight-s')
                         // console.log(batmanRows.length);
                         let teamsName = teamName[j].textContent
-                        let teamPlayer=[]
+                        let teamPlayer=[]           // it will assign array of each team..and after exit loop assigned himself empty..
 
                         console.log("\n------------  ",teamsName,"  ------------\n");
 
@@ -66,11 +66,11 @@ request(link , function cb(err,req,html)
                                 let sixers  = tds[6].textContent
 
                                 teamPlayer.push({"Name":batsmanName,"Runs":Run,"Balls":balls,"Fours":fours,"Sixers":sixers})
-                                playerDetails(batsmanName,Run,balls,fours,sixers,teamsName);
+                                playerDetails(batsmanName,Run,balls,fours,sixers,teamsName);        // calling the func. to insert in array obj..
                                 
                             }
                         }
-                        console.table(teamPlayer)
+                        console.table(teamPlayer)       //-- it will create  team name in tabular fom..
                     }
                     
                     console.log("\n-------------->\t",winnerTeam.textContent,"\t <-----------------");
