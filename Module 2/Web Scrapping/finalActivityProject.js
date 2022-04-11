@@ -1,4 +1,6 @@
 const request = require('request')
+let fs = require('fs')
+let xlsx = require('json-as-xlsx')
 const jsdom = require('jsdom')
 const { JSDOM } = jsdom
 
@@ -44,7 +46,7 @@ request(link , function cb(err,req,html)
                         // console.log(batmanRows.length);
                         console.log("\n------------  ",teamName[j].textContent,"  ------------\n");
 
-                        console.log("-- Batman --\t \t -- Runs -- \t -- Balls -- \t -- fourth -- \t -- sixer ---\n")
+                        console.log("-- Batman --\t \t -- Runs -- \t -- Balls -- \t -- fours -- \t -- sixer ---\n")
                         for(let k=0; k<batmanRows.length; k++)
                         {
                             let tds = batmanRows[k].querySelectorAll('td')
@@ -59,9 +61,9 @@ request(link , function cb(err,req,html)
                                 let fours  = tds[5].textContent
                                 let sixers  = tds[6].textContent
 
-                                // console.log(batsmanName,"\t   ","\t\t",Run,"\t\t",balls,"\t\t",fours,"\t\t",sixers);
+                                console.log(batsmanName,"\t   ","\t\t",Run,"\t\t",balls,"\t\t",fours,"\t\t",sixers);
 
-                                playerDetails(batsmanName,Run,balls,fours,sixers);
+                                playerDetails(batsmanName,Run,balls,fours,sixers,teamName[j].textContent);
                                 
                             }
                         }
@@ -72,7 +74,33 @@ request(link , function cb(err,req,html)
 
                 counter--;
                 if(counter == 0)
-                    console.log(allPlayer);
+                {
+                    // console.log(allPlayer);
+                    let playerData = JSON.stringify(allPlayer)
+                    fs.writeFileSync('IplPlayer.json',playerData)
+                    let data =[
+                        {
+                            sheet : "BatsmanInIpl",
+                            columns:[
+                                {label : "Name", value : "Name"},
+                                {label : "Runs", value : "Runs"},
+                                {label : "Balls", value : "Balls"},
+                                {label : "Fours", value : "Fours"},
+                                {label : "Sixers", value : "Sixers"},
+                                {label : "Innings", value : "Innings"},
+                                {label : "TeamName", value : "TeamName"}
+                            ],
+                            content : allPlayer
+                        },
+                    ]
+                    let settings ={
+                        fileName : "IplPlayer",
+                        extraLength :3,
+                        writeOptions :{},
+                    }
+                    xlsx(data,settings)
+                }
+
             })
             
             
@@ -82,7 +110,7 @@ request(link , function cb(err,req,html)
 })
 
 // console.log("------------------------   All player who participated in Ipl 2022....  --------------------------------------------");
-function playerDetails(batsmanName,Run,Ball,fours,sixers)
+function playerDetails(batsmanName,Run,Ball,fours,sixers,teamName)
 {
     Run =Number(Run)
     Ball =Number(Ball)
@@ -92,7 +120,7 @@ function playerDetails(batsmanName,Run,Ball,fours,sixers)
     {
         let playerObj = allPlayer[i]
         
-        if(playerObj.Name == batsmanName)
+        if(playerObj.Name == batsmanName && playerObj.TeamName == teamName)
         {
             playerObj.Runs    += Run
             playerObj.Balls   += Ball
@@ -109,7 +137,8 @@ function playerDetails(batsmanName,Run,Ball,fours,sixers)
         Balls : Ball,
         Fours : fours,
         Sixers  : sixers,
-        Innings : 1
+        Innings : 1,
+        TeamName : teamName
     }
     allPlayer.push(obj)
 }

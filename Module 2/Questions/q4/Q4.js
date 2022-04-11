@@ -21,11 +21,11 @@ for(let i=0; i<old_content.length; i++){
 }
 
 // console.log(content);
-
+ 
 for(let i=0;i<content.length;i++)
-// {
-//     console.log(__dirname);      //-- to chck where is directory...
-//     console.log(fs.existsSync(content[i]))       -- to chck what it says..
+{
+    // console.log(__dirname);      //-- to chck where is directory...
+    // console.log(fs.existsSync(content[i]))       //-- to chck what it says..
     if(!fs.existsSync(content[i]))
     {
        
@@ -40,23 +40,27 @@ for(let i=0;i<content.length;i++)
             let extsname = path.extname(name)
             
             // if(extarr.includes(extsname)==false)
-            // console.log(file[j], extsname, extarr[i], i, j);
-            // console.log(extarr) 
-            // console.log("\n");
+            // {
+
+            //     console.log(file[j], extsname, extarr[i], i, j);
+            //     console.log(extarr) 
+            //     console.log("\n");
+            //     extarr.push(extsname)
+            // }
             if(extsname !== extarr[i])
             {
-                //for loop on extarr
-                //.includes("")
 
                 // console.log(file[j], extsname, extarr[i], i, j);
                 // console.log(extarr) 
                 
                 extarr.push(extsname)
+            }
                
-            }  
+            // }  
             // console.log(file[j])
                 
         }
     }
 
+}
 console.log(extarr)
