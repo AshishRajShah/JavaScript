@@ -6,7 +6,7 @@ const { JSDOM } = jsdom
 
 const githubLink ="https://github.com/topics"               //-- main link of github topics page...
 
-request(githubLink,function cb(err,req,html)
+request(githubLink,function(err,req,html)
 {
     if(err)
         console.log('error : ',err);
@@ -22,9 +22,12 @@ request(githubLink,function cb(err,req,html)
             let contentLink = "https://github.com" + content[i].href        //  link to go content sites main page...
             console.log(contentLink); 
 
+            /*                  ---- fetch dir name by new query selector.....
+
             // let contentDirName = contentDir[i].textContent.replace(/[\r\n\t]+/gm,"").trim()       // content dir...name..
-            // console.log(contentDirName); 
-                                    //------   or to fetch last file name........
+            // console.log(contentDirName);  */
+
+                                    //------   or to fetch main file name from his link or address........
             let contentDirName = path.basename(contentLink)
             console.log(contentDirName);
 
@@ -32,7 +35,7 @@ request(githubLink,function cb(err,req,html)
             if(!fs.existsSync(contentDirName))
                 fs.mkdirSync(contentDirName)            // create directory of main 3 content 
 
-            request(contentLink,contentDirName,function cb2(err,reqs,html)
+            request(contentLink,contentDirName,function(err,reqs,html)      //this link will let us go to repo page..
             {
                 if(err)
                     console.log("error :- ",err);
@@ -48,14 +51,15 @@ request(githubLink,function cb(err,req,html)
                         // console.log(repoLink);
 
                         // let repoName = repo[j].textContent.replace(/[\n\r]+/gm,"").trim()      //-- repo name for create file with this..
-
+                                   
+                                    //------   or to fetch main file name from his link or address........
                         let repoName = path.basename(repoLink)          //---= to fetch repo file name...
                         // console.log(repoName);
-
-                        let fileName = path.join(__dirname,contentDirName,repoName) //-- repo name with its address..
+                        repoName += '.json'     //--file save as json..
+                        let fileName = path.join(__dirname,contentDirName,repoName) //-- repo as file name with its address..
                         // console.log(fileName);
                         
-                        request(repoLink,function cb3(err,requ,html)
+                        request(repoLink,fileName,function(err,requ,html)     //-- go to repo main page where issues are...
                         {
                             if(err)
                                 console.log('error : ',err);
@@ -66,52 +70,48 @@ request(githubLink,function cb(err,req,html)
                                 let issueLink = "https://github.com"+ document.querySelector('a[id="issues-tab"]').href
                                 // console.log(issueLink);
 
-                                if(!fs.existsSync(fileName))
+                                request(issueLink,function(err,reqst,html)      // go to issue page..after requesting it...
                                 {
-                                    request(issueLink,function cb4(err,reqst,html)
+                                    if(err)
+                                        console.log('error : ',err);
+                                    else
                                     {
-                                        if(err)
-                                            console.log('error : ',err);
-                                        else
+                                        let issue =[]
+                                        const dom = new JSDOM(html)
+                                        const document = dom.window.document
+                                                        //------------   issue list which are in issue link page...
+                                        let issuesList= document.querySelectorAll('.Link--primary.v-align-middle')
+                                        
+                                        for(let k=0;k<issuesList.length;k++)
                                         {
-                                            let issue =[]
-                                            const dom = new JSDOM(html)
-                                            const document = dom.window.document
-                                            let issuesList= document.querySelectorAll('.Link--primary.v-align-middle')
-                                            
-                                            for(let k=0;k<issuesList.length;k++)
+                                            if( k>=4 || k==null )
+                                                break
+                                            else
                                             {
-                                                if( k>4 || k==0 )
-                                                    break
-                                                else
-                                                {
-                                                    let obj = {}
-                                                    let issuesListLink = issuesList[k].href
-                                                    console.log(issuesListLink);
+                                                let obj = {}
+                                                let issuesListLink = "https://github.com"+issuesList[k].href
+                                                    // console.log(issuesListLink);
 
-                                                    // let issueName = issuesList[k].textContent      //---
-                                                            //--------  or fetch text name...
-                                                    let issueName = path.basename(issuesListLink)
-                                                    console.log(issueName);
+                                                let issueName = issuesList[k].textContent      //---
+                                                       //--------  or fetch text name...
+                                                // let issueName = path.basename(issuesListLink)
+                                                  // console.log(issueName);
 
-                                                    obj.IssueName = issueName
-                                                    obj.issueLink = issuesListLink
-                                                    issue.push(obj)
-                                                    console.log(issue);
-                                                }
+                                                obj.IssueName = issueName
+                                                obj.issueLink = issuesListLink
+                                                issue.push(obj)         // push in array to store multiple objects...
+                                                // console.log(issue);
                                             }
-                                            fs.writeFileSync(fileName,"")
                                         }
-                                    })
-                                }
-
+                                        if(!fs.existsSync(fileName))
+                                            fs.writeFileSync(fileName,JSON.stringify(issue))        
+                                    }
+                                })
                             }
                         })
-                        
                    }
                 }
             })
         }
-
     }
 })
